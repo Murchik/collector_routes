@@ -1,7 +1,7 @@
 # collector_routes
 A project to build collector routes for ATMs
 
-## Progect uses:
+## Project uses:
 * Gin (web framework): https://github.com/gin-gonic/gin
 
 ## Get started:
