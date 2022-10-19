@@ -3,6 +3,7 @@ A project to create ATM collection routes
 
 ## Project uses:
 * Gin (web framework): https://github.com/gin-gonic/gin
+* pgx (Driver and Toolkit for PostgreSQL): https://github.com/jackc/pgx/
 
 ## Get started:
 ```
