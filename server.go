@@ -9,9 +9,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
+
+	"github.com/Murchik/collector_routes/cpp_module"
 )
 
 func main() {
+	// cpp hello world
+	cpp_module.SayHello()
+
 	// pgx hello world
 	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
