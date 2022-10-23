@@ -9,5 +9,5 @@ A project to create ATM collection routes
 ```
 git clone https://github.com/Murchik/collector_routes collector_routes
 cd collector_routes
-go run server.go
+make
 ```
