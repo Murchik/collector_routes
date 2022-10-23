@@ -1,0 +1,9 @@
+# VSCode configs
+.vscode
+
+# files from builing C++ libraries
+*.o
+*.so
+
+# project executable
+*.out
