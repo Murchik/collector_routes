@@ -8,11 +8,12 @@ import (
 
 func MakeQuerry() {
 
-	resp, err := http.Get("https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=node(1);out;")
+	resp, err := http.Get("https://overpass-api.de/api/interpreter?data=node(1);out;")
 
 	if err != nil {
 		//log.Fatal(err)
 		fmt.Println(err)
+		return
 	}
 
 	defer resp.Body.Close()
@@ -22,8 +23,9 @@ func MakeQuerry() {
 	if err != nil {
 		//log.Fatal(err)
 		fmt.Println(err)
+		return
 	}
 
-	fmt.Println(body)
+	fmt.Println(string(body))
 
 }
