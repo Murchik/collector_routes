@@ -6,6 +6,8 @@ import (
 
 func main() {
 
-	overpass.MakeQuerry()
+	//overpass.MakeQuerry()
+
+	overpass.GetATMs()
 
 }
