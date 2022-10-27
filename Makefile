@@ -4,7 +4,7 @@ RM ?= rm
 
 all: run
 
-run: server.go libAlgorithms.so
+run: server.go
 	go run server.go
 
 libAlgorithms.so:
@@ -15,4 +15,4 @@ build: libAlgorithms.so
 
 clean:
 	cd cpp_module/cpp_module && $(MAKE) clean
-	$(RM) server.out
+	$(RM) server.out *.json *.xml
