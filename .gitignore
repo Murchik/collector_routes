@@ -7,3 +7,7 @@
 
 # project executable
 *.out
+
+# files from requests\responses
+*.xml
+*.json
