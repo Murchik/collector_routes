@@ -2,97 +2,87 @@ package overpass
 
 import (
 	"encoding/xml"
-	"fmt"
-	"io/ioutil"
+	"io"
+	"log"
 	"net/http"
 	"os"
 )
 
-type Node struct {
-	Id  int     `xml:"id,attr"`
-	Lat float64 `xml:"lat,attr"`
-	Lon float64 `xml:"lon,attr"`
+type Osm struct {
+	XMLName   xml.Name `xml:"osm"`
+	Version   string   `xml:"version,attr"`
+	Generator string   `xml:"generator,attr"`
+	Note      string   `xml:"note"`
+	Meta      Meta     `xml:"meta"`
+	Nodes     []Node   `xml:"node"`
 }
 
-type ATMS struct {
-	XMLName xml.Name
-	Atms    []Node
+type Meta struct {
+	XMLName xml.Name `xml:"meta"`
+	OsmBase string   `xml:"osm_base,attr"`
+}
+
+type Node struct {
+	XMLName   xml.Name `xml:"node"`
+	Id        int      `xml:"id,attr"`
+	Latitude  float64  `xml:"lat,attr"`
+	Longitude float64  `xml:"lon,attr"`
+	Tags      []Tag    `xml:"tag"`
+}
+
+type Tag struct {
+	XMLName xml.Name `xml:"tag"`
+	Key     string   `xml:"k,attr"`
+	Value   string   `xml:"v,attr"`
+}
+
+func check(e error) {
+	if e != nil {
+		log.Fatal(e.Error())
+	}
 }
 
 func GetATMs() {
 	//55.66076 / 37.480117 (lat/lon)
 	//55.809556 / 37.7053288 (lat/lon)
 
-	OPserv := "https://overpass-api.de/api/interpreter?data="
-	OPdata := "node[amenity=atm](55.66076,37.480117,55.809556,37.7053288);out;"
+	// Compose querry
+	OSMserv := "https://overpass-api.de/api/interpreter?data="
+	OSMdata := "node[amenity=atm](55.66076,37.480117,55.809556,37.7053288);out;"
+	querry := OSMserv + OSMdata
 
-	querry := fmt.Sprintf("%s%s", OPserv, OPdata)
-	fmt.Println(querry)
-
+	// Make request
+	log.Println("Making request: ", querry)
 	resp, err := http.Get(querry)
-
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		return
-	}
-
+	check(err)
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	// Decode response body into struct
+	log.Println("Decoding response into Osm struct...")
+	var atms Osm
+	xml.NewDecoder(resp.Body).Decode(&atms)
 
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		return
-	}
-
-	// open input file
-	fo, err := os.Create("input.txt")
-	if err != nil {
-		panic(err)
-	}
-	// close fo on exit and check for its returned error
-	defer func() {
-		if err := fo.Close(); err != nil {
-			panic(err)
-		}
-	}()
-
-	var atms ATMS
-
-	xml.Unmarshal(body, &atms)
-
-	if _, err := fo.Write(body); err != nil {
-		panic(err)
-	}
-
-	fmt.Println(atms)
-	//fmt.Println(atms.XMLName)
-	//fmt.Println(atms.Atms[0])
-
+	// Write resulting struct into .xml file
+	log.Println("Writing into osmOutput.xml...")
+	xmlBody, err := xml.MarshalIndent(atms, "", "  ")
+	check(err)
+	err = os.WriteFile("osmOutput.xml", xmlBody, 0644)
+	check(err)
 }
 
 func MakeQuerry() {
-
-	resp, err := http.Get("https://overpass-api.de/api/interpreter?data=node(1);out;")
-
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		return
-	}
-
+	// Make request
+	querry := "https://overpass-api.de/api/interpreter?data=node(1);out;"
+	log.Println("Making request: ", querry)
+	resp, err := http.Get(querry)
+	check(err)
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		//log.Fatal(err)
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println(string(body))
-
+	// Write response to file
+	log.Println("Writing into testResponseInterpreter.xml...")
+	out, err := os.Create("testResponseInterpreter.xml")
+	check(err)
+	defer out.Close()
+	_, err = io.Copy(out, resp.Body)
+	check(err)
 }
