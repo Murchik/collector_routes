@@ -26,11 +26,11 @@ func pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
 	var max_time float64 = 480
 
 	for i := 0; i < len(ATMS); i++ {
-		unvisited_nodes = append(unvisited_nodes, ATMS[i].id)
+		unvisited_nodes = append(unvisited_nodes, ATMS[i].Id)
 	}
 
-	visited_nodes = append(visited_nodes, start.id)
-	unvisited_nodes = delete_by_value(unvisited_nodes, start.id)
+	visited_nodes = append(visited_nodes, start.Id)
+	unvisited_nodes = delete_by_value(unvisited_nodes, start.Id)
 
 	for time < max_time || len(unvisited_nodes) != 0 {
 
@@ -43,7 +43,7 @@ func pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
 			temp := matr[current_node][unvisited_nodes[i]]
 
 			if temp < nearest_distance {
-				if temp+matr[i][start.id] < float64(max_time) {
+				if temp+matr[i][start.Id] < max_time {
 					nearest_distance = temp
 					nearest_i = i
 				}

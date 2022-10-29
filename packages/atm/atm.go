@@ -1,13 +1,13 @@
 package atm
 
-type coordinates struct {
-	lat float64
-	lon float64
+type Coordinates struct {
+	Lat float64
+	Lon float64
 }
 
 type ATM struct {
-	id                    int
-	coordinates           coordinates
-	bunker_in, bunker_out float64
-	rate_in, rate_out     float64
+	Id                    int
+	Coordinates           Coordinates
+	Bunker_in, Bunker_out float64
+	Rate_in, Rate_out     float64
 }
