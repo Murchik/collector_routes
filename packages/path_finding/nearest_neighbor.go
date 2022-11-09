@@ -1,7 +1,9 @@
 package pathfinding
 
 import (
-	atm "github.com/Murchik/collector_routes/packages/ATM"
+	"fmt"
+
+	atm "github.com/Murchik/collector_routes/packages/atm"
 )
 
 func delete_by_value(s []int, v int) []int {
@@ -17,7 +19,7 @@ func delete_by_value(s []int, v int) []int {
 }
 
 // Входные  параметры - список банкоматов, матрица смежности, начальный банкомат
-func pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
+func Pathfinding(ATMS []atm.ATM, matr [1000][1000]float64, start atm.ATM) []int {
 
 	var unvisited_nodes []int // Непосещённые вершины
 	var visited_nodes []int   // Посещенные вершины
@@ -32,11 +34,14 @@ func pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
 	visited_nodes = append(visited_nodes, start.Id)
 	unvisited_nodes = delete_by_value(unvisited_nodes, start.Id)
 
-	for time < max_time || len(unvisited_nodes) != 0 {
-
-		current_node = visited_nodes[0]
-		nearest_distance := matr[current_node][unvisited_nodes[1]]
-		nearest_i := 1
+	for time < max_time {
+		fmt.Println(time < max_time)
+		if len(unvisited_nodes) == 0 {
+			break
+		}
+		current_node = visited_nodes[0] // индекс текущего банкомата
+		nearest_distance := matr[current_node][unvisited_nodes[0]]
+		nearest_i := 0
 
 		for i := 1; i < len(unvisited_nodes); i++ {
 
@@ -49,16 +54,18 @@ func pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
 				}
 			}
 		}
-		if nearest_i == 1 {
+		if nearest_i == current_node {
 			break
 		} else {
 			time += matr[current_node][unvisited_nodes[nearest_i]]
-			current_node = unvisited_nodes[nearest_i]
+			current_node = nearest_i
 			visited_nodes = append(visited_nodes, current_node)
 			unvisited_nodes = delete_by_value(unvisited_nodes, current_node)
 		}
 
 	}
+
+	visited_nodes = append(visited_nodes, start.Id)
 
 	return visited_nodes
 }

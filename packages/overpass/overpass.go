@@ -42,7 +42,7 @@ func check(e error) {
 	}
 }
 
-func GetATMs() {
+func GetATMs() []Node {
 	//55.66076 / 37.480117 (lat/lon)
 	//55.809556 / 37.7053288 (lat/lon)
 
@@ -68,6 +68,8 @@ func GetATMs() {
 	check(err)
 	err = os.WriteFile("osmOutput.xml", xmlBody, 0644)
 	check(err)
+
+	return atms.Nodes
 }
 
 func MakeQuerry() {
