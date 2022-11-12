@@ -1,28 +1,39 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 
 	"github.com/Murchik/collector_routes/packages/atm"
-	"github.com/Murchik/collector_routes/packages/overpass"
 	"github.com/Murchik/collector_routes/packages/pathfinding"
 )
 
 func main() {
-	const qnt int = 1000
-	var atms []atm.ATM
-	var arr [qnt][qnt]float64
-
-	overpass_atms := overpass.GetATMs()
-
-	log.Println("Making array of ATMs...")
-	for index, atm_ := range overpass_atms {
-		atms = append(atms, atm.ATM{Id: index, Latitude: atm_.Latitude, Longitude: atm_.Longitude, Bunker_in: 0.3, Bunker_out: 0.3, Rate_in: 0.25, Rate_out: 0.25})
+	// Получить ATMs в структурку
+	log.Println("Making request...")
+	atms, err := atm.GetATMs()
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 
+	// Записать структурку в файл
+	log.Println("Writing into osmOutput.xml...")
+	xml, err := xml.MarshalIndent(atms, "", "  ")
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	err = os.WriteFile("osmOutput.xml", xml, 0644)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	// Создать рандомные пути
 	log.Println("Making matrix...")
+	const qnt int = 1000
+	var arr [qnt][qnt]float64
 	for i := 0; i < qnt; i++ {
 		for j := 0; j < qnt; j++ {
 			if i == j {
@@ -32,9 +43,11 @@ func main() {
 		}
 	}
 
+	// Найти пусть
 	log.Println("Searching for path...")
-	res := pathfinding.Pathfinding(atms, arr, atms[0])
+	res := pathfinding.Pathfinding(atms[0:qnt], arr, atms[0])
 
+	// Записать путь в файл
 	log.Println("Write results...")
 	for index, id := range res {
 		fmt.Println(index, id)

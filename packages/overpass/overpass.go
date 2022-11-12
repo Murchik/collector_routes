@@ -2,11 +2,15 @@ package overpass
 
 import (
 	"encoding/xml"
-	"io"
-	"log"
+	"fmt"
 	"net/http"
-	"os"
 )
+
+type City struct {
+	Name     string
+	Radius   float64
+	Lat, Lon float64
+}
 
 type Osm struct {
 	XMLName   xml.Name `xml:"osm"`
@@ -36,55 +40,26 @@ type Tag struct {
 	Value   string   `xml:"v,attr"`
 }
 
-func check(e error) {
-	if e != nil {
-		log.Fatal(e.Error())
-	}
-}
-
-func GetATMs() []Node {
-	//55.66076 / 37.480117 (lat/lon)
-	//55.809556 / 37.7053288 (lat/lon)
-
+func MakeQuerry(c City, amenity string) (Osm, error) {
 	// Compose querry
-	OSMserv := "https://overpass-api.de/api/interpreter?data="
-	OSMdata := "node[amenity=atm](55.66076,37.480117,55.809556,37.7053288);out;"
+	const OSMserv = "https://overpass-api.de/api/interpreter?data="
+	OSMdata := fmt.Sprintf("node[amenity=\"%s\"](around:%f,%f,%f);out;", amenity, c.Radius, c.Lat, c.Lon)
 	querry := OSMserv + OSMdata
 
-	// Make request
-	log.Println("Making request: ", querry)
+	// Make querry
+	// TODO: handle http errors
 	resp, err := http.Get(querry)
-	check(err)
+	if err != nil {
+		return Osm{}, err
+	}
 	defer resp.Body.Close()
 
-	// Decode response body into struct
-	log.Println("Decoding response into Osm struct...")
-	var atms Osm
-	xml.NewDecoder(resp.Body).Decode(&atms)
+	// Decode body into struct
+	var osm Osm
+	err = xml.NewDecoder(resp.Body).Decode(&osm)
+	if err != nil {
+		return Osm{}, err
+	}
 
-	// Write resulting struct into .xml file
-	log.Println("Writing into osmOutput.xml...")
-	xmlBody, err := xml.MarshalIndent(atms, "", "  ")
-	check(err)
-	err = os.WriteFile("osmOutput.xml", xmlBody, 0644)
-	check(err)
-
-	return atms.Nodes
-}
-
-func MakeQuerry() {
-	// Make request
-	querry := "https://overpass-api.de/api/interpreter?data=node(1);out;"
-	log.Println("Making request: ", querry)
-	resp, err := http.Get(querry)
-	check(err)
-	defer resp.Body.Close()
-
-	// Write response to file
-	log.Println("Writing into testResponseInterpreter.xml...")
-	out, err := os.Create("testResponseInterpreter.xml")
-	check(err)
-	defer out.Close()
-	_, err = io.Copy(out, resp.Body)
-	check(err)
+	return osm, nil
 }
