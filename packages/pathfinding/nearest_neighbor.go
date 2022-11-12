@@ -3,7 +3,7 @@ package pathfinding
 import (
 	"fmt"
 
-	atm "github.com/Murchik/collector_routes/packages/atm"
+	"github.com/Murchik/collector_routes/packages/atm"
 )
 
 func delete_by_value(s []int, v int) []int {

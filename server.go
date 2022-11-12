@@ -7,12 +7,10 @@ import (
 
 	"github.com/Murchik/collector_routes/packages/atm"
 	"github.com/Murchik/collector_routes/packages/overpass"
-	nn "github.com/Murchik/collector_routes/packages/path_finding"
+	"github.com/Murchik/collector_routes/packages/pathfinding"
 )
 
 func main() {
-
-	//overpass.MakeQuerry()
 	const qnt int = 1000
 	var atms []atm.ATM
 	var arr [qnt][qnt]float64
@@ -35,8 +33,9 @@ func main() {
 	}
 
 	log.Println("Searching for path...")
-	res := nn.Pathfinding(atms, arr, atms[0])
+	res := pathfinding.Pathfinding(atms, arr, atms[0])
 
+	log.Println("Write results...")
 	for index, id := range res {
 		fmt.Println(index, id)
 	}
