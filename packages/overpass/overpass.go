@@ -40,15 +40,15 @@ type Tag struct {
 	Value   string   `xml:"v,attr"`
 }
 
-func MakeQuerry(c City, amenity string) (Osm, error) {
-	// Compose querry
+func MakeQuery(c City, amenity string) (Osm, error) {
+	// Compose query
 	const OSMserv = "https://overpass-api.de/api/interpreter?data="
 	OSMdata := fmt.Sprintf("node[amenity=\"%s\"](around:%f,%f,%f);out;", amenity, c.Radius, c.Lat, c.Lon)
-	querry := OSMserv + OSMdata
+	query := OSMserv + OSMdata
 
-	// Make querry
+	// Make query
 	// TODO: handle http errors
-	resp, err := http.Get(querry)
+	resp, err := http.Get(query)
 	if err != nil {
 		return Osm{}, err
 	}

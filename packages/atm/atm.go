@@ -12,8 +12,8 @@ type ATM struct {
 }
 
 func GetATMs() ([]ATM, error) {
-	moscow := overpass.City{Name: "Moscow", Radius: 18000.0, Lat: 55.6659, Lon: 37.5704}
-	data, err := overpass.MakeQuerry(moscow, "atm")
+	moscow := overpass.City{Name: "Moscow", Radius: 18000.0, Lat: 55.752221, Lon: 37.623978}
+	data, err := overpass.MakeQuery(moscow, "atm")
 	if err != nil {
 		return nil, err
 	}

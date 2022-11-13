@@ -43,7 +43,7 @@ func main() {
 		}
 	}
 
-	// Найти пусть
+	// Найти путь
 	log.Println("Searching for path...")
 	res := pathfinding.Pathfinding(atms[0:qnt], arr, atms[0])
 
