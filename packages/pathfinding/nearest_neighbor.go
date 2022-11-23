@@ -1,8 +1,6 @@
 package pathfinding
 
 import (
-	"fmt"
-
 	"github.com/Murchik/collector_routes/packages/atm"
 )
 
@@ -19,7 +17,7 @@ func delete_by_value(s []int, v int) []int {
 }
 
 // Входные  параметры - список банкоматов, матрица смежности, начальный банкомат
-func Pathfinding(ATMS []atm.ATM, matr [1000][1000]float64, start atm.ATM) []int {
+func Pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
 
 	var unvisited_nodes []int // Непосещённые вершины
 	var visited_nodes []int   // Посещенные вершины
@@ -35,18 +33,14 @@ func Pathfinding(ATMS []atm.ATM, matr [1000][1000]float64, start atm.ATM) []int 
 	unvisited_nodes = delete_by_value(unvisited_nodes, start.Id)
 
 	for time < max_time {
-		fmt.Println(time < max_time)
 		if len(unvisited_nodes) == 0 {
 			break
 		}
 		current_node = visited_nodes[0] // индекс текущего банкомата
 		nearest_distance := matr[current_node][unvisited_nodes[0]]
 		nearest_i := 0
-
 		for i := 1; i < len(unvisited_nodes); i++ {
-
-			temp := matr[current_node][unvisited_nodes[i]]
-
+			temp := matr[current_node][unvisited_nodes[i]] // в этой строке ошибка, unvisited_nodes[i] > 999 не может быть; возможно где-то путаница c Id и порядковым номером
 			if temp < nearest_distance {
 				if temp+matr[i][start.Id] < max_time {
 					nearest_distance = temp

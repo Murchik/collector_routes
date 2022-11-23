@@ -1,6 +1,9 @@
 package atm
 
 import (
+	"log"
+	"strconv"
+
 	"github.com/Murchik/collector_routes/packages/overpass"
 )
 
@@ -20,7 +23,22 @@ func GetATMs() ([]ATM, error) {
 
 	var atms []ATM
 	for i, v := range data.Nodes {
-		atms = append(atms, ATM{i, v.Latitude, v.Longitude, 0.3, 0.3, 0.25, 0.25})
+		atms = append(atms, ATM{i, v.Latitude, v.Longitude, 0.3, 0.3, 0.7, 0.25})
 	}
 	return atms, nil
+}
+
+func GetAtmsOnDay(atms []ATM, day int64) []ATM {
+
+	var res []ATM
+
+	log.Println("Searching for ATMs which need to visit on day " + strconv.FormatInt(day, 10) + "...")
+
+	for _, atm := range atms {
+		if (atm.BunkerIn-float64(day)*atm.RateIn <= 0) || (atm.BunkerOut-float64(day)*atm.RateOut <= 0) {
+			res = append(res, atm)
+		}
+	}
+
+	return res
 }
