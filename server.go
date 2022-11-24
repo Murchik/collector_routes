@@ -12,12 +12,17 @@ import (
 )
 
 func main() {
+
+	const qnt int = 1000
+
 	// Получить ATMs в структурку
 	log.Println("Making request...")
 	atms, err := atm.GetATMs()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	atms = atms[:qnt] // Делаем это потому что матрица на 1000
 
 	// Записать структурку в файл
 	log.Println("Writing into osmOutput.xml...")
@@ -32,19 +37,27 @@ func main() {
 
 	// Создать рандомные пути
 	log.Println("Making matrix...")
-	const qnt int = 1000
+
 	arr := make([][]float64, qnt)
 	for i := range arr {
 		arr[i] = make([]float64, qnt)
 	}
+	//var dinst float64 = 1
 	for i := 0; i < qnt; i++ {
 		for j := 0; j < qnt; j++ {
 			if i == j {
 				continue
 			}
+			// Сделать так чтобы arr[i][j] == arr[j][i]
 			arr[i][j] = rand.Float64()*30 + 30
+			//arr[i][j] = dinst
+			//dinst += 1
 		}
 	}
+
+	// res := pathfinding.Pathfinding(atms[0:qnt], arr, atms[0])
+	// log.Println(res)
+	// log.Fatal("aaa")
 
 	// банкоматы на завтра
 	atms_1 := atm.GetAtmsOnDay(atms, 1)

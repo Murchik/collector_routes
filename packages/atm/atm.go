@@ -23,7 +23,7 @@ func GetATMs() ([]ATM, error) {
 
 	var atms []ATM
 	for i, v := range data.Nodes {
-		atms = append(atms, ATM{i, v.Latitude, v.Longitude, 0.3, 0.3, 0.7, 0.25})
+		atms = append(atms, ATM{i, v.Latitude, v.Longitude, 0.3, 0.3, 0.7, 0.25}) // Напихать рандомные данные
 	}
 	return atms, nil
 }
