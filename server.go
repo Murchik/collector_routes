@@ -13,7 +13,7 @@ import (
 
 func main() {
 
-	const qnt int = 1000
+	const qnt int = 5
 
 	// Получить ATMs в структурку
 	log.Println("Making request...")
@@ -42,22 +42,30 @@ func main() {
 	for i := range arr {
 		arr[i] = make([]float64, qnt)
 	}
-	//var dinst float64 = 1
+	//var dinst float64 = 10
 	for i := 0; i < qnt; i++ {
 		for j := 0; j < qnt; j++ {
 			if i == j {
-				continue
+				arr[i][j] = 0
+			} else {
+				if j < i {
+					arr[i][j] = arr[j][i]
+				} else {
+					arr[i][j] = rand.Float64()*30 + 30
+				}
 			}
 			// Сделать так чтобы arr[i][j] == arr[j][i]
-			arr[i][j] = rand.Float64()*30 + 30
+
 			//arr[i][j] = dinst
 			//dinst += 1
 		}
 	}
 
-	// res := pathfinding.Pathfinding(atms[0:qnt], arr, atms[0])
-	// log.Println(res)
-	// log.Fatal("aaa")
+	//res := pathfinding.Pathfinding(atms[0:qnt], arr, atms[0])
+	for i := 0; i < len(arr); i++ {
+		log.Println(arr[i])
+	}
+	log.Fatal("aaa")
 
 	// банкоматы на завтра
 	atms_1 := atm.GetAtmsOnDay(atms, 1)

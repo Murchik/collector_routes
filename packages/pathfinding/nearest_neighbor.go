@@ -23,7 +23,7 @@ func Pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
 	var visited_nodes []int   // Посещенные вершины храним Id банкоматов
 	var current_node int
 	var time float64
-	var max_time float64 = 480 // Продолжительность рабочего дня
+	var max_time float64 = 100 // Продолжительность рабочего дня
 
 	// Отмечаем все банкоматы как непосещенные
 	for i := 0; i < len(ATMS); i++ {
