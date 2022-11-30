@@ -17,5 +17,46 @@ func CreateConnection() *pgx.Conn {
 	}
 
 	return conn
+}
 
+func SelectQuery(conn *pgx.Conn) {
+
+	// https://pkg.go.dev/github.com/jackc/pgx#hdr-Query_Interface
+	// https://www.sohamkamani.com/golang/sql-database/
+	qry := "SELECT * FROM terminals"
+
+	rows, err := conn.Query(context.Background(), qry)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	terminals := []Terminal{}
+
+	for rows.Next() {
+		terminal := Terminal{}
+
+		err := rows.Scan(&terminal.Id, &terminal.Owner, &terminal.Address, &terminal.Latitudes, &terminal.Longitudes)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		terminals = append(terminals, terminal)
+	}
+
+	if rows.Err() != nil {
+		log.Fatal(err)
+	}
+}
+
+func InsertQuery(conn *pgx.Conn) {
+
+	commandTag, err := conn.Exec(context.Background(), "DELETE FROM widgets WEHRE id=$1", 42)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if commandTag.RowsAffected() != 1 {
+		log.Println("No row found to delete")
+	}
 }
