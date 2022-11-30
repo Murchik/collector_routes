@@ -8,12 +8,18 @@ import (
 	"strconv"
 
 	"github.com/Murchik/collector_routes/packages/atm"
+	"github.com/Murchik/collector_routes/packages/db"
 	"github.com/Murchik/collector_routes/packages/pathfinding"
 )
 
 func main() {
 
 	const qnt int = 5
+
+	// Подключение к базе данных
+	db := db.CreateConnection()
+	log.Println(db)
+	panic("asdadas")
 
 	// Получить ATMs в структурку
 	log.Println("Making request...")
