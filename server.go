@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/xml"
 	"log"
 	"math/rand"
 	"os"
 	"strconv"
 
+	"github.com/Murchik/collector_routes/config"
 	"github.com/Murchik/collector_routes/database"
 	"github.com/Murchik/collector_routes/models"
 	"github.com/Murchik/collector_routes/pathfinding"
@@ -17,8 +19,10 @@ func main() {
 	const qnt int = 5
 
 	// Подключение к базе данных
-	db := database.CreateConnection()
-	log.Println(db)
+	ctx := context.Background()
+	db := database.CreateConnection(ctx, config.GetURL())
+	defer db.Close(ctx)
+
 	log.Fatal("AfterDatabaseConnect")
 
 	// Получить ATMs в структурку

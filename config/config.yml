@@ -1,0 +1,7 @@
+environment: dev
+postgre:
+  host: 185.225.34.182
+  port: 5432
+  user: maximov
+  password: 123456
+  dbname: test_db
