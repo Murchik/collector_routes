@@ -15,13 +15,27 @@ import (
 )
 
 func main() {
-
 	const qnt int = 5
 
 	// Подключение к базе данных
 	ctx := context.Background()
 	db := database.CreateConnection(ctx, config.GetURL())
 	defer db.Close(ctx)
+
+	// Получение всех терминалов из базы данных
+	terminals := database.SelectTerminals(db)
+	log.Println(terminals)
+
+	// Добавление в базу данных одного терминала
+	database.InsertTerminal(db, models.Terminal{Id: 104})
+
+	// Добавление в базу данных массива терминалов
+	terminals = []models.Terminal{
+		{Id: 104},
+		{Id: 105},
+		{Id: 106},
+	}
+	database.InsertTerminals(db, terminals)
 
 	log.Fatal("AfterDatabaseConnect")
 
