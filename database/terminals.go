@@ -37,6 +37,7 @@ func InsertTerminals(conn *pgx.Conn, terminals []models.Terminal) {
 	}
 
 	batchResult := conn.SendBatch(context.Background(), batch)
+	defer batchResult.Close()
 
 	commandTag, err := batchResult.Exec()
 	if err != nil {
