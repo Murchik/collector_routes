@@ -1,9 +1,10 @@
-package db
+package database
 
 import (
 	"context"
 	"log"
 
+	"github.com/Murchik/collector_routes/models"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -31,10 +32,10 @@ func SelectQuery(conn *pgx.Conn) {
 	}
 	defer rows.Close()
 
-	terminals := []Terminal{}
+	terminals := []models.Terminal{}
 
 	for rows.Next() {
-		terminal := Terminal{}
+		terminal := models.Terminal{}
 
 		err := rows.Scan(&terminal.Id, &terminal.Owner, &terminal.Address, &terminal.Latitudes, &terminal.Longitudes)
 		if err != nil {

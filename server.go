@@ -7,9 +7,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Murchik/collector_routes/packages/atm"
-	"github.com/Murchik/collector_routes/packages/db"
-	"github.com/Murchik/collector_routes/packages/pathfinding"
+	"github.com/Murchik/collector_routes/database"
+	"github.com/Murchik/collector_routes/models"
+	"github.com/Murchik/collector_routes/pathfinding"
 )
 
 func main() {
@@ -17,13 +17,13 @@ func main() {
 	const qnt int = 5
 
 	// Подключение к базе данных
-	db := db.CreateConnection()
+	db := database.CreateConnection()
 	log.Println(db)
-	panic("asdadas")
+	log.Fatal("AfterDatabaseConnect")
 
 	// Получить ATMs в структурку
 	log.Println("Making request...")
-	atms, err := atm.GetATMs()
+	atms, err := models.GetATMs()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -71,10 +71,10 @@ func main() {
 	for i := 0; i < len(arr); i++ {
 		log.Println(arr[i])
 	}
-	log.Fatal("aaa")
+	log.Fatal("AfterSomething")
 
 	// банкоматы на завтра
-	atms_1 := atm.GetAtmsOnDay(atms, 1)
+	atms_1 := models.GetAtmsOnDay(atms, 1)
 
 	f, err := os.Create("./routes.txt")
 

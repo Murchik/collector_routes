@@ -1,7 +1,7 @@
 package pathfinding
 
 import (
-	"github.com/Murchik/collector_routes/packages/atm"
+	"github.com/Murchik/collector_routes/models"
 )
 
 func delete_by_value(s []int, v int) []int {
@@ -17,7 +17,7 @@ func delete_by_value(s []int, v int) []int {
 }
 
 // Входные  параметры - список банкоматов, матрица смежности, начальный банкомат
-func Pathfinding(ATMS []atm.ATM, matr [][]float64, start atm.ATM) []int {
+func Pathfinding(ATMS []models.ATM, matr [][]float64, start models.ATM) []int {
 
 	var unvisited_nodes []int // Непосещённые вершины храним Id банкоматов
 	var visited_nodes []int   // Посещенные вершины храним Id банкоматов

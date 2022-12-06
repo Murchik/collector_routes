@@ -1,4 +1,4 @@
-package db
+package models
 
 type Terminal struct {
 	Id                    int

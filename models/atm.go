@@ -1,10 +1,10 @@
-package atm
+package models
 
 import (
 	"log"
 	"strconv"
 
-	"github.com/Murchik/collector_routes/packages/overpass"
+	"github.com/Murchik/collector_routes/overpass"
 )
 
 type ATM struct {
