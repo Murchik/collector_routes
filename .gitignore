@@ -11,3 +11,6 @@
 # files from requests\responses
 *.xml
 *.json
+
+# others
+*.txt
