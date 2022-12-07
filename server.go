@@ -18,26 +18,21 @@ func main() {
 	defer db.Close(ctx)
 
 	// Получение всех терминалов из базы данных
-	log.Println("Terminals in database:")
-	terminals := database.SelectTerminals(db)
-	for _, t := range terminals {
-		log.Printf("Terminal ID: %v, on coords: [Lat: %f, Lon: %f]\n", t.Id, t.Latitudes, t.Longitudes)
-	}
+	//terminals := database.SelectTerminals(db)
+	//log.Println(terminals)
 
-	/*
-		// Добавление в базу данных одного терминала
-		database.InsertTerminal(db, models.Terminal{Id: 104})
-	*/
+	// Добавление в базу данных одного терминала
+	//database.InsertTerminal(db, models.Terminal{Id: 104})
 
-	/*
-		// Добавление в базу данных массива терминалов
-		terminals = []models.Terminal{
-			{Id: 104},
-			{Id: 105},
-			{Id: 106},
-		}
-		database.InsertTerminals(db, terminals)
-	*/
+	// Добавление в базу данных массива терминалов
+	// terminals = []models.Terminal{
+	// 	{Id: 104},
+	// 	{Id: 105},
+	// 	{Id: 106},
+	// }
+	// database.InsertTerminals(db, terminals)
+
+	// log.Fatal("AfterDatabaseConnect")
 
 	// Получить ATMs в структурку
 	log.Println("Making request...")
