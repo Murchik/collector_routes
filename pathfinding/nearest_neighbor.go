@@ -22,7 +22,7 @@ func delete_by_value(s []int, v int) []int {
 	return s
 }
 
-// Входные данные - список банкоматов, матрица расстояний, начальный банкомат
+// Входные данные - список банкоматов, матрица расстояний, стартовый банкомат
 // Выходные данные - маршрут
 func Pathfinding(ATMS []models.ATM, matr [][]float64, start models.ATM) []int {
 
@@ -41,8 +41,9 @@ func Pathfinding(ATMS []models.ATM, matr [][]float64, start models.ATM) []int {
 	unvisited_nodes = delete_by_value(unvisited_nodes, start.Id) // Удаляем банкомат из непосещенных
 	current_node = visited_nodes[0]                              // Id последнего посещенного банкомата
 
-	for time < max_time {
-		// Если укладываемся в максимальную продолжительность рабочего дня, то увеличиваем текущую
+	for true {
+
+		// Если непосещенных банкоматов не осталось
 		if len(unvisited_nodes) == 0 {
 			break
 		}
@@ -50,7 +51,7 @@ func Pathfinding(ATMS []models.ATM, matr [][]float64, start models.ATM) []int {
 		nearest_distance := matr[current_node][unvisited_nodes[0]] // расстояние до ближайшего банкомата
 		nearest_i := unvisited_nodes[0]                            // Ближайший банкомат к последнему посещенному (Id банкомата)
 
-		// Если осталась непосещенной один банкомат
+		// Если остался непосещенной один банкомат
 		if len(unvisited_nodes) == 1 {
 			temp := matr[current_node][unvisited_nodes[0]]
 			// Если укладываемся в макс. время, то увеличиваем текущую
@@ -85,7 +86,7 @@ func Pathfinding(ATMS []models.ATM, matr [][]float64, start models.ATM) []int {
 
 	}
 
-	// Возвращаемся в начальный банкомат
+	// Добавляем стартовый банкомат
 	visited_nodes = append(visited_nodes, start.Id)
 	time += matr[current_node][start.Id]
 
