@@ -4,18 +4,18 @@ import (
 	"context"
 	"encoding/xml"
 	"log"
-	"math/rand"
 	"os"
 	"strconv"
 
 	"github.com/Murchik/collector_routes/config"
 	"github.com/Murchik/collector_routes/database"
 	"github.com/Murchik/collector_routes/models"
-	"github.com/Murchik/collector_routes/pathfinding"
+	pf "github.com/Murchik/collector_routes/pathfinding"
 )
 
 func main() {
-	const qnt int = 5
+
+	const qnt int = 20
 
 	// Подключение к базе данных
 	ctx := context.Background()
@@ -46,7 +46,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	atms = atms[:qnt] // Делаем это потому что матрица на 1000
+	atms = atms[:qnt]
 
 	// Записать структурку в файл
 	log.Println("Writing into osmOutput.xml...")
@@ -60,57 +60,22 @@ func main() {
 	}
 
 	// Создать рандомные пути
-	log.Println("Making matrix...")
-
-	arr := make([][]float64, qnt)
-	for i := range arr {
-		arr[i] = make([]float64, qnt)
-	}
-	//var dinst float64 = 10
-	for i := 0; i < qnt; i++ {
-		for j := 0; j < qnt; j++ {
-			if i == j {
-				arr[i][j] = 0
-			} else {
-				if j < i {
-					arr[i][j] = arr[j][i]
-				} else {
-					arr[i][j] = rand.Float64()*30 + 30
-				}
-			}
-			// Сделать так чтобы arr[i][j] == arr[j][i]
-
-			//arr[i][j] = dinst
-			//dinst += 1
-		}
-	}
-
-	//res := pathfinding.Pathfinding(atms[0:qnt], arr, atms[0])
-	for i := 0; i < len(arr); i++ {
-		log.Println(arr[i])
-	}
-	//log.Fatal("AfterSomething")
+	log.Println("Making distance matrix...")
+	dist_matrix := pf.CreateDistanceMatrix(qnt)
 
 	// банкоматы на завтра
-	atms_1 := models.GetAtmsOnDay(atms, 1)
+	//atms_1 := models.GetAtmsOnDay(atms, 1)
+	atms_1 := atms
 
 	f, err := os.Create("./routes.txt")
 
 	for group := 0; group < 5; group++ {
 
 		// Найти путь
-		log.Println("Searching for path...")
-		res := pathfinding.Pathfinding(atms_1[0:qnt], arr, atms_1[0])
+		log.Println("Searching for path for group " + strconv.FormatInt(int64(group), 10))
+		res := pf.Pathfinding(atms_1, dist_matrix, atms_1[0])
 		// Удалить найденные банкоматы из общего массива
-		for i := 0; i < len(atms_1); i++ {
-			for j := 1; j < len(res)-1; j++ {
-				if atms_1[i].Id == res[j] {
-					atms_1 = append(atms_1[:i], atms_1[i+1:]...)
-					i -= 1
-					break
-				}
-			}
-		}
+		atms_1 = pf.DeleteAtmsFromArray(atms_1, res)
 
 		// Записать путь в файл
 		log.Println("Write results...")
@@ -122,7 +87,10 @@ func main() {
 			f.WriteString(" ")
 		}
 		f.WriteString("\n")
-		break
+
+		if len(atms_1) == 0 {
+			break
+		}
 	}
 
 }

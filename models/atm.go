@@ -2,32 +2,40 @@ package models
 
 import (
 	"log"
+	"math/rand"
 	"strconv"
 
 	"github.com/Murchik/collector_routes/overpass"
 )
 
-type ATM struct {
-	Id                  int
-	Latitude, Longitude float64
-	BunkerIn, BunkerOut float64
-	RateIn, RateOut     float64
+// Возвращает случайное число от 0 до 1
+func getRandomNumber() float64 {
+	return rand.Float64()
 }
 
+type ATM struct {
+	Id                  int     // id банкомата
+	Latitude, Longitude float64 // Координаты
+	BunkerIn, BunkerOut float64 // Состояние бункеров
+	RateIn, RateOut     float64 // Скорость заполнения бункеров
+}
+
+// Возвращает массив с банкоматами
 func GetATMs() ([]ATM, error) {
-	moscow := overpass.City{Name: "Moscow", Radius: 18000.0, Lat: 55.752221, Lon: 37.623978}
-	data, err := overpass.MakeQuery(moscow, "atm")
+	moscow := overpass.City{Name: "Moscow", Radius: 18000.0, Lat: 55.752221, Lon: 37.623978} // Диапазон поиска банкоматов
+	data, err := overpass.MakeQuery(moscow, "atm")                                           // Запрос к overpass
 	if err != nil {
 		return nil, err
 	}
 
 	var atms []ATM
 	for i, v := range data.Nodes {
-		atms = append(atms, ATM{i, v.Latitude, v.Longitude, 0.3, 0.3, 0.7, 0.25}) // Напихать рандомные данные
+		atms = append(atms, ATM{i, v.Latitude, v.Longitude, getRandomNumber(), getRandomNumber(), getRandomNumber(), getRandomNumber()})
 	}
 	return atms, nil
 }
 
+// Входные данные - массив банкоматов, день на который надо посетить банкомат
 func GetAtmsOnDay(atms []ATM, day int64) []ATM {
 
 	var res []ATM
