@@ -23,21 +23,21 @@ func main() {
 	defer db.Close(ctx)
 
 	// Получение всех терминалов из базы данных
-	terminals := database.SelectTerminals(db)
-	log.Println(terminals)
+	//terminals := database.SelectTerminals(db)
+	//log.Println(terminals)
 
 	// Добавление в базу данных одного терминала
-	database.InsertTerminal(db, models.Terminal{Id: 104})
+	//database.InsertTerminal(db, models.Terminal{Id: 104})
 
 	// Добавление в базу данных массива терминалов
-	terminals = []models.Terminal{
-		{Id: 104},
-		{Id: 105},
-		{Id: 106},
-	}
-	database.InsertTerminals(db, terminals)
+	// terminals = []models.Terminal{
+	// 	{Id: 104},
+	// 	{Id: 105},
+	// 	{Id: 106},
+	// }
+	// database.InsertTerminals(db, terminals)
 
-	log.Fatal("AfterDatabaseConnect")
+	// log.Fatal("AfterDatabaseConnect")
 
 	// Получить ATMs в структурку
 	log.Println("Making request...")
@@ -89,7 +89,7 @@ func main() {
 	for i := 0; i < len(arr); i++ {
 		log.Println(arr[i])
 	}
-	log.Fatal("AfterSomething")
+	//log.Fatal("AfterSomething")
 
 	// банкоматы на завтра
 	atms_1 := models.GetAtmsOnDay(atms, 1)
@@ -100,10 +100,10 @@ func main() {
 
 		// Найти путь
 		log.Println("Searching for path...")
-		res := pathfinding.Pathfinding(atms_1[0:qnt], arr, atms_1[0]) // сейчас кдаляется начальный банкомат, надо это исправить и сделать начальный банкомат всегда одинаковый либо заменить его на какую то другую точку
+		res := pathfinding.Pathfinding(atms_1[0:qnt], arr, atms_1[0])
 		// Удалить найденные банкоматы из общего массива
 		for i := 0; i < len(atms_1); i++ {
-			for j := 0; j < len(res); j++ {
+			for j := 1; j < len(res)-1; j++ {
 				if atms_1[i].Id == res[j] {
 					atms_1 = append(atms_1[:i], atms_1[i+1:]...)
 					i -= 1
@@ -122,6 +122,7 @@ func main() {
 			f.WriteString(" ")
 		}
 		f.WriteString("\n")
+		break
 	}
 
 }
