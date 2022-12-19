@@ -10,16 +10,26 @@ import (
 )
 
 const (
-	terminalColumns = "id, owner, address, latitudes, longitudes, bunker_priema_procent, bunker_vidachi_procent"
-	insertValues    = "$1, $2, $3, $4, $5, $6, $7"
+	terminalColumns = "id, owner, address, latitudes, longitudes, bunker_in, bunker_out, rate_in, rate_out"
+	insertValues    = "$1, $2, $3, $4, $5, $6, $7, $8, $9"
 )
 
 func InsertTerminal(conn *pgx.Conn, t models.Terminal) {
 	sqlStr := fmt.Sprintf("INSERT INTO terminals (%s) VALUES(%s)", terminalColumns, insertValues)
 
-	commandTag, err := conn.Exec(context.Background(), sqlStr, t.Id, t.Owner, t.Address, t.Latitudes, t.Longitudes, t.Bunker_priema_procent, t.Bunker_vidachi_procent)
+	commandTag, err := conn.Exec(context.Background(), sqlStr,
+		t.Id,
+		t.Owner,
+		t.Address,
+		t.Latitudes,
+		t.Longitudes,
+		t.BunkerIn,
+		t.BunkerOut,
+		t.RateIn,
+		t.RateOut)
+
 	if err != nil {
-		log.Fatalln(err.Error())
+		log.Println(err.Error())
 	}
 
 	if commandTag.RowsAffected() != 1 {
@@ -33,7 +43,16 @@ func InsertTerminals(conn *pgx.Conn, terminals []models.Terminal) {
 	sqlStr := fmt.Sprintf("INSERT INTO terminals (%s) VALUES(%s)", terminalColumns, insertValues)
 
 	for _, t := range terminals {
-		batch.Queue(sqlStr, t.Id, t.Owner, t.Address, t.Latitudes, t.Longitudes, t.Bunker_priema_procent, t.Bunker_vidachi_procent)
+		batch.Queue(sqlStr,
+			t.Id,
+			t.Owner,
+			t.Address,
+			t.Latitudes,
+			t.Longitudes,
+			t.BunkerIn,
+			t.BunkerOut,
+			t.RateIn,
+			t.RateOut)
 	}
 
 	batchResult := conn.SendBatch(context.Background(), batch)
@@ -61,7 +80,7 @@ func SelectTerminals(conn *pgx.Conn) []models.Terminal {
 	for rows.Next() {
 		var t models.Terminal
 
-		err := rows.Scan(&t.Id, &t.Owner, &t.Address, &t.Latitudes, &t.Longitudes, &t.Bunker_priema_procent, &t.Bunker_vidachi_procent)
+		err := rows.Scan(&t.Id, &t.Owner, &t.Address, &t.Latitudes, &t.Longitudes, &t.BunkerIn, &t.BunkerOut, &t.RateIn, &t.RateOut)
 		if err != nil {
 			log.Println(err.Error())
 		}

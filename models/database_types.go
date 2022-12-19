@@ -1,11 +1,12 @@
 package models
 
 type Terminal struct {
-	Id                                            int
-	Owner                                         string
-	Address                                       string
-	Latitudes, Longitudes                         float64
-	Bunker_priema_procent, Bunker_vidachi_procent int
+	Id                    int
+	Owner                 string
+	Address               string
+	Latitudes, Longitudes float64
+	BunkerIn, BunkerOut   float64
+	RateIn, RateOut       float64
 }
 
 type Team struct {

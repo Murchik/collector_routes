@@ -14,30 +14,14 @@ import (
 )
 
 func main() {
-
-	const qnt int = 20
-
 	// Подключение к базе данных
 	ctx := context.Background()
 	db := database.CreateConnection(ctx, config.GetURL())
 	defer db.Close(ctx)
 
-	// Получение всех терминалов из базы данных
-	//terminals := database.SelectTerminals(db)
-	//log.Println(terminals)
-
-	// Добавление в базу данных одного терминала
-	//database.InsertTerminal(db, models.Terminal{Id: 104})
-
-	// Добавление в базу данных массива терминалов
-	// terminals = []models.Terminal{
-	// 	{Id: 104},
-	// 	{Id: 105},
-	// 	{Id: 106},
-	// }
-	// database.InsertTerminals(db, terminals)
-
-	// log.Fatal("AfterDatabaseConnect")
+	// Очиститиь таблицу терминалов
+	log.Println("Clearing terminals table...")
+	database.ClearTable(db, "terminals")
 
 	// Получить ATMs в структурку
 	log.Println("Making request...")
@@ -46,7 +30,9 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	atms = atms[:qnt]
+	// Сохраняем ATMs в базу данных
+	log.Println("Inserting ATMs into db...")
+	database.InsertTerminals(db, atms)
 
 	// Записать структурку в файл
 	log.Println("Writing into osmOutput.xml...")
@@ -59,12 +45,15 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	const qnt int = 20
+	atms = atms[:qnt]
+
 	// Создать рандомные пути
 	log.Println("Making distance matrix...")
 	dist_matrix := pf.CreateDistanceMatrix(qnt)
 
 	// банкоматы на завтра
-	//atms_1 := models.GetAtmsOnDay(atms, 1)
+	// atms_1 := models.GetAtmsOnDay(atms, 1)
 	atms_1 := atms
 
 	f, err := os.Create("./routes.txt")

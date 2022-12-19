@@ -22,9 +22,8 @@ func delete_by_value(s []int, v int) []int {
 	return s
 }
 
-// Входные данные - список банкоматов, матрица расстояний, стартовый банкомат
-// Выходные данные - маршрут
-func Pathfinding(ATMS []models.ATM, matr [][]float64, start models.ATM) []int {
+// Входные  параметры - список банкоматов, матрица смежности, начальный банкомат
+func Pathfinding(ATMS []models.Terminal, matr [][]float64, start models.Terminal) []int {
 
 	var unvisited_nodes []int  // Непосещённые вершины (храним Id банкоматов)
 	var visited_nodes []int    // Посещенные вершины (храним Id банкоматов)
@@ -120,7 +119,7 @@ func CreateDistanceMatrix(qnt int) [][]float64 {
 }
 
 // Удаляем из массива банкоматов arr1 банкоматы с индексами, содержащимися в массиве arr2
-func DeleteAtmsFromArray(arr1 []models.ATM, arr2 []int) []models.ATM {
+func DeleteAtmsFromArray(arr1 []models.Terminal, arr2 []int) []models.Terminal {
 	for i := 0; i < len(arr1); i++ {
 		for j := 1; j < len(arr2)-1; j++ {
 			if arr1[i].Id == arr2[j] {
