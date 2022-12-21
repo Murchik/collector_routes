@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/xml"
 	"log"
 	"os"
 	"strconv"
@@ -34,16 +33,16 @@ func main() {
 	log.Println("Inserting ATMs into db...")
 	database.InsertTerminals(db, atms)
 
-	// Записать структурку в файл
-	log.Println("Writing into osmOutput.xml...")
-	xml, err := xml.MarshalIndent(atms, "", "  ")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-	err = os.WriteFile("osmOutput.xml", xml, 0644)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	// // Записать структурку в файл
+	// log.Println("Writing into osmOutput.xml...")
+	// xml, err := xml.MarshalIndent(atms, "", "  ")
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+	// err = os.WriteFile("osmOutput.xml", xml, 0644)
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
 
 	const qnt int = 20
 	atms = atms[:qnt]

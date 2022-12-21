@@ -21,9 +21,9 @@ func GetATMs() ([]Terminal, error) {
 	}
 
 	var atms []Terminal
-	for _, v := range data.Nodes {
+	for i, v := range data.Nodes {
 		atms = append(atms, Terminal{
-			Id:         v.Id,
+			Id:         i,
 			Owner:      "",
 			Address:    "",
 			Latitudes:  v.Latitude,
