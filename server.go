@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 
+	//"strconv"
+
 	"github.com/Murchik/collector_routes/config"
 	"github.com/Murchik/collector_routes/database"
 	"github.com/Murchik/collector_routes/models"
@@ -31,8 +33,8 @@ func main() {
 	}
 
 	// Сохраняем ATMs в базу данных
-	log.Println("Inserting ATMs into db...")
-	database.InsertTerminals(db, atms)
+	// log.Println("Inserting ATMs into db...")
+	// database.InsertTerminals(db, atms)
 
 	// Записать структурку в файл
 	log.Println("Writing into osmOutput.xml...")
@@ -45,15 +47,22 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	const qnt int = 20
+	const qnt int = 3
 	atms = atms[:qnt]
 
 	// Создать рандомные пути
 	log.Println("Making distance matrix...")
-	dist_matrix := pf.CreateDistanceMatrix(qnt)
+	//dist_matrix := pf.CreateDistanceMatrix(qnt)
+	//var dist_matrix [][3]float64
+	//dist_matrix = dist_matrix[:]
+	dist_matrix := pf.CreateDistanceMatrix(atms, qnt)
+
+	for i := 0; i < len(dist_matrix); i++ {
+		log.Println(dist_matrix[i])
+	}
 
 	// банкоматы на завтра
-	// atms_1 := models.GetAtmsOnDay(atms, 1)
+	atms_1 := models.GetAtmsOnDay(atms, 1)
 	atms_1 := atms
 
 	f, err := os.Create("./routes.txt")
