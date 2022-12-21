@@ -43,7 +43,11 @@ type Tag struct {
 func MakeQuery(c City, amenity string) (Osm, error) {
 	// Compose query
 	const OSMserv = "https://overpass-api.de/api/interpreter?data="
-	OSMdata := fmt.Sprintf("node[amenity=\"%s\"](around:%f,%f,%f);out;", amenity, c.Radius, c.Lat, c.Lon)
+	OSMdata := fmt.Sprintf("node[amenity=\"%s\"](around:%f,%f,%f);out;",
+		amenity,
+		c.Radius,
+		c.Lat,
+		c.Lon)
 	query := OSMserv + OSMdata
 
 	// Make query

@@ -33,35 +33,23 @@ func main() {
 	log.Println("Inserting ATMs into db...")
 	database.InsertTerminals(db, atms)
 
-	// // Записать структурку в файл
-	// log.Println("Writing into osmOutput.xml...")
-	// xml, err := xml.MarshalIndent(atms, "", "  ")
-	// if err != nil {
-	// 	log.Fatal(err.Error())
-	// }
-	// err = os.WriteFile("osmOutput.xml", xml, 0644)
-	// if err != nil {
-	// 	log.Fatal(err.Error())
-	// }
-
 	const qnt int = 20
-	atms = atms[:qnt]
+
+	// банкоматы на завтра
+	// atms_1 := models.GetAtmsOnDay(atms, 1)
+	atms_1 := atms[:qnt]
 
 	// Создать рандомные пути
 	log.Println("Making distance matrix...")
 	dist_matrix := pf.CreateDistanceMatrix(qnt)
 
-	// банкоматы на завтра
-	// atms_1 := models.GetAtmsOnDay(atms, 1)
-	atms_1 := atms
-
 	f, err := os.Create("./routes.txt")
 
 	for group := 0; group < 5; group++ {
-
 		// Найти путь
 		log.Println("Searching for path for group " + strconv.FormatInt(int64(group), 10))
 		res := pf.Pathfinding(atms_1, dist_matrix, atms_1[0])
+
 		// Удалить найденные банкоматы из общего массива
 		atms_1 = pf.DeleteAtmsFromArray(atms_1, res)
 
@@ -70,10 +58,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
 		for i := 0; i < len(res); i++ {
 			f.WriteString(strconv.FormatInt(int64(res[i]), 10))
 			f.WriteString(" ")
 		}
+
 		f.WriteString("\n")
 
 		if len(atms_1) == 0 {

@@ -14,7 +14,12 @@ func getRandomNumber() float64 {
 
 // Возвращает массив с банкоматами
 func GetATMs() ([]Terminal, error) {
-	moscow := overpass.City{Name: "Moscow", Radius: 18000.0, Lat: 55.752221, Lon: 37.623978}
+	moscow := overpass.City{
+		Name:   "Moscow",
+		Radius: 18000.0,
+		Lat:    55.752221,
+		Lon:    37.623978,
+	}
 	data, err := overpass.MakeQuery(moscow, "atm")
 	if err != nil {
 		return nil, err
@@ -42,7 +47,8 @@ func GetAtmsOnDay(atms []Terminal, day int) []Terminal {
 
 	log.Println("Searching for ATMs which need to visit on day ", day, "...")
 	for _, atm := range atms {
-		if (atm.BunkerIn-float64(day)*atm.RateIn <= 0) || (atm.BunkerOut-float64(day)*atm.RateOut <= 0) {
+		if (atm.BunkerIn-float64(day)*atm.RateIn <= 0) ||
+			(atm.BunkerOut-float64(day)*atm.RateOut <= 0) {
 			res = append(res, atm)
 		}
 	}
